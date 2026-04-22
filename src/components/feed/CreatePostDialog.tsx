@@ -67,7 +67,7 @@ export function CreatePostDialog({ open, onOpenChange }: Props) {
         imageUrl = urlData.publicUrl;
       }
 
-      const insert: Record<string, unknown> = {
+      const insert = {
         author_id: user.id,
         type,
         title: title.trim(),
@@ -76,15 +76,13 @@ export function CreatePostDialog({ open, onOpenChange }: Props) {
         hashtags: parseHashtags(`${title} ${content}`),
         image_url: imageUrl,
         emoji: emoji || null,
+        atolye_status: type === "atolye" ? ("bekliyor" as const) : null,
+        brand_name: type === "oneri" ? (brandName.trim() || null) : null,
+        brand_category: type === "oneri" ? (brandCategory.trim() || null) : null,
+        brand_rating: type === "oneri" ? brandRating : null,
+        brand_price_label: type === "oneri" ? (brandPriceLabel.trim() || null) : null,
+        brand_usage_months: type === "oneri" && brandUsageMonths ? parseInt(brandUsageMonths, 10) : null,
       };
-      if (type === "atolye") insert.atolye_status = "bekliyor";
-      if (type === "oneri") {
-        insert.brand_name = brandName.trim() || null;
-        insert.brand_category = brandCategory.trim() || null;
-        insert.brand_rating = brandRating;
-        insert.brand_price_label = brandPriceLabel.trim() || null;
-        insert.brand_usage_months = brandUsageMonths ? parseInt(brandUsageMonths, 10) : null;
-      }
 
       const { error } = await supabase.from("posts").insert(insert);
       if (error) throw error;
