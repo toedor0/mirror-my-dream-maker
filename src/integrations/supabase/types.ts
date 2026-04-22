@@ -14,7 +14,257 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      comments: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: string
+          pin_x: number | null
+          pin_y: number | null
+          post_id: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: string
+          pin_x?: number | null
+          pin_y?: number | null
+          post_id: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: string
+          pin_x?: number | null
+          pin_y?: number | null
+          post_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      follows: {
+        Row: {
+          created_at: string
+          follower_id: string
+          following_id: string
+        }
+        Insert: {
+          created_at?: string
+          follower_id: string
+          following_id: string
+        }
+        Update: {
+          created_at?: string
+          follower_id?: string
+          following_id?: string
+        }
+        Relationships: []
+      }
+      likes: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          actor_id: string | null
+          created_at: string
+          id: string
+          post_id: string | null
+          read: boolean
+          recipient_id: string
+          type: Database["public"]["Enums"]["notif_type"]
+        }
+        Insert: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          read?: boolean
+          recipient_id: string
+          type: Database["public"]["Enums"]["notif_type"]
+        }
+        Update: {
+          actor_id?: string | null
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          read?: boolean
+          recipient_id?: string
+          type?: Database["public"]["Enums"]["notif_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          atolye_status: Database["public"]["Enums"]["atolye_status"] | null
+          author_id: string
+          brand_category: string | null
+          brand_name: string | null
+          brand_price_label: string | null
+          brand_rating: number | null
+          brand_usage_months: number | null
+          category: string | null
+          content: string | null
+          created_at: string
+          emoji: string | null
+          hashtags: string[] | null
+          id: string
+          image_url: string | null
+          kunye: Json | null
+          read_minutes: number | null
+          title: string
+          type: Database["public"]["Enums"]["post_type"]
+          updated_at: string
+        }
+        Insert: {
+          atolye_status?: Database["public"]["Enums"]["atolye_status"] | null
+          author_id: string
+          brand_category?: string | null
+          brand_name?: string | null
+          brand_price_label?: string | null
+          brand_rating?: number | null
+          brand_usage_months?: number | null
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          emoji?: string | null
+          hashtags?: string[] | null
+          id?: string
+          image_url?: string | null
+          kunye?: Json | null
+          read_minutes?: number | null
+          title: string
+          type: Database["public"]["Enums"]["post_type"]
+          updated_at?: string
+        }
+        Update: {
+          atolye_status?: Database["public"]["Enums"]["atolye_status"] | null
+          author_id?: string
+          brand_category?: string | null
+          brand_name?: string | null
+          brand_price_label?: string | null
+          brand_rating?: number | null
+          brand_usage_months?: number | null
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          emoji?: string | null
+          hashtags?: string[] | null
+          id?: string
+          image_url?: string | null
+          kunye?: Json | null
+          read_minutes?: number | null
+          title?: string
+          type?: Database["public"]["Enums"]["post_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_emoji: string | null
+          avatar_url: string | null
+          bio: string | null
+          city: string | null
+          created_at: string
+          display_name: string
+          hobbies: string[] | null
+          id: string
+          updated_at: string
+          username: string
+        }
+        Insert: {
+          avatar_emoji?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          display_name: string
+          hobbies?: string[] | null
+          id: string
+          updated_at?: string
+          username: string
+        }
+        Update: {
+          avatar_emoji?: string | null
+          avatar_url?: string | null
+          bio?: string | null
+          city?: string | null
+          created_at?: string
+          display_name?: string
+          hobbies?: string[] | null
+          id?: string
+          updated_at?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      saves: {
+        Row: {
+          created_at: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saves_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +273,10 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      atolye_status: "bekliyor" | "cozuldu"
+      difficulty_level: "kolay" | "orta" | "zor" | "uzman"
+      notif_type: "like" | "comment" | "follow" | "solved" | "save"
+      post_type: "uretim" | "atolye" | "oneri" | "blog"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +403,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      atolye_status: ["bekliyor", "cozuldu"],
+      difficulty_level: ["kolay", "orta", "zor", "uzman"],
+      notif_type: ["like", "comment", "follow", "solved", "save"],
+      post_type: ["uretim", "atolye", "oneri", "blog"],
+    },
   },
 } as const
