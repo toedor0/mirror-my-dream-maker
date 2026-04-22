@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as KesfetRouteImport } from './routes/kesfet'
+import { Route as KaydedilenlerRouteImport } from './routes/kaydedilenler'
+import { Route as BildirimlerRouteImport } from './routes/bildirimler'
+import { Route as AtolyeRouteImport } from './routes/atolye'
 import { Route as IndexRouteImport } from './routes/index'
 
+const KesfetRoute = KesfetRouteImport.update({
+  id: '/kesfet',
+  path: '/kesfet',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KaydedilenlerRoute = KaydedilenlerRouteImport.update({
+  id: '/kaydedilenler',
+  path: '/kaydedilenler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BildirimlerRoute = BildirimlerRouteImport.update({
+  id: '/bildirimler',
+  path: '/bildirimler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AtolyeRoute = AtolyeRouteImport.update({
+  id: '/atolye',
+  path: '/atolye',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,78 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/atolye': typeof AtolyeRoute
+  '/bildirimler': typeof BildirimlerRoute
+  '/kaydedilenler': typeof KaydedilenlerRoute
+  '/kesfet': typeof KesfetRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/atolye': typeof AtolyeRoute
+  '/bildirimler': typeof BildirimlerRoute
+  '/kaydedilenler': typeof KaydedilenlerRoute
+  '/kesfet': typeof KesfetRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/atolye': typeof AtolyeRoute
+  '/bildirimler': typeof BildirimlerRoute
+  '/kaydedilenler': typeof KaydedilenlerRoute
+  '/kesfet': typeof KesfetRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/atolye' | '/bildirimler' | '/kaydedilenler' | '/kesfet'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/atolye' | '/bildirimler' | '/kaydedilenler' | '/kesfet'
+  id:
+    | '__root__'
+    | '/'
+    | '/atolye'
+    | '/bildirimler'
+    | '/kaydedilenler'
+    | '/kesfet'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtolyeRoute: typeof AtolyeRoute
+  BildirimlerRoute: typeof BildirimlerRoute
+  KaydedilenlerRoute: typeof KaydedilenlerRoute
+  KesfetRoute: typeof KesfetRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/kesfet': {
+      id: '/kesfet'
+      path: '/kesfet'
+      fullPath: '/kesfet'
+      preLoaderRoute: typeof KesfetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kaydedilenler': {
+      id: '/kaydedilenler'
+      path: '/kaydedilenler'
+      fullPath: '/kaydedilenler'
+      preLoaderRoute: typeof KaydedilenlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bildirimler': {
+      id: '/bildirimler'
+      path: '/bildirimler'
+      fullPath: '/bildirimler'
+      preLoaderRoute: typeof BildirimlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/atolye': {
+      id: '/atolye'
+      path: '/atolye'
+      fullPath: '/atolye'
+      preLoaderRoute: typeof AtolyeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,7 +127,20 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtolyeRoute: AtolyeRoute,
+  BildirimlerRoute: BildirimlerRoute,
+  KaydedilenlerRoute: KaydedilenlerRoute,
+  KesfetRoute: KesfetRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
