@@ -14,6 +14,7 @@ import { Route as KaydedilenlerRouteImport } from './routes/kaydedilenler'
 import { Route as BildirimlerRouteImport } from './routes/bildirimler'
 import { Route as AtolyeRouteImport } from './routes/atolye'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProfilUsernameRouteImport } from './routes/profil.$username'
 
 const KesfetRoute = KesfetRouteImport.update({
   id: '/kesfet',
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfilUsernameRoute = ProfilUsernameRouteImport.update({
+  id: '/profil/$username',
+  path: '/profil/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +53,7 @@ export interface FileRoutesByFullPath {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/profil/$username': typeof ProfilUsernameRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByTo {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/profil/$username': typeof ProfilUsernameRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,12 +70,25 @@ export interface FileRoutesById {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/profil/$username': typeof ProfilUsernameRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/atolye' | '/bildirimler' | '/kaydedilenler' | '/kesfet'
+  fullPaths:
+    | '/'
+    | '/atolye'
+    | '/bildirimler'
+    | '/kaydedilenler'
+    | '/kesfet'
+    | '/profil/$username'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/atolye' | '/bildirimler' | '/kaydedilenler' | '/kesfet'
+  to:
+    | '/'
+    | '/atolye'
+    | '/bildirimler'
+    | '/kaydedilenler'
+    | '/kesfet'
+    | '/profil/$username'
   id:
     | '__root__'
     | '/'
@@ -75,6 +96,7 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/profil/$username'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,6 +105,7 @@ export interface RootRouteChildren {
   BildirimlerRoute: typeof BildirimlerRoute
   KaydedilenlerRoute: typeof KaydedilenlerRoute
   KesfetRoute: typeof KesfetRoute
+  ProfilUsernameRoute: typeof ProfilUsernameRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +145,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profil/$username': {
+      id: '/profil/$username'
+      path: '/profil/$username'
+      fullPath: '/profil/$username'
+      preLoaderRoute: typeof ProfilUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -131,6 +161,7 @@ const rootRouteChildren: RootRouteChildren = {
   BildirimlerRoute: BildirimlerRoute,
   KaydedilenlerRoute: KaydedilenlerRoute,
   KesfetRoute: KesfetRoute,
+  ProfilUsernameRoute: ProfilUsernameRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

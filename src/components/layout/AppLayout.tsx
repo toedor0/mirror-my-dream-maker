@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Link, useLocation } from "@tanstack/react-router";
 import {
-  Search, Home, Compass, Bell, User, Bookmark, Wrench, Sparkles,
+  Search, Home, Compass, Bell, User, Bookmark, Wrench,
   Moon, Sun, Plus, LogOut,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
