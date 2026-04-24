@@ -18,12 +18,13 @@ type PostType = "uretim" | "atolye" | "oneri" | "blog";
 interface Props {
   open: boolean;
   onOpenChange: (o: boolean) => void;
+  defaultType?: PostType;
 }
 
-export function CreatePostDialog({ open, onOpenChange }: Props) {
+export function CreatePostDialog({ open, onOpenChange, defaultType = "uretim" }: Props) {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [type, setType] = useState<PostType>("uretim");
+  const [type, setType] = useState<PostType>(defaultType);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState<string>("");
