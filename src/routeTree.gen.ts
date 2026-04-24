@@ -13,7 +13,9 @@ import { Route as KesfetRouteImport } from './routes/kesfet'
 import { Route as KaydedilenlerRouteImport } from './routes/kaydedilenler'
 import { Route as BildirimlerRouteImport } from './routes/bildirimler'
 import { Route as AtolyeRouteImport } from './routes/atolye'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProfilUsernameRouteImport } from './routes/profil.$username'
 
 const KesfetRoute = KesfetRouteImport.update({
@@ -36,10 +38,20 @@ const AtolyeRoute = AtolyeRouteImport.update({
   path: '/atolye',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ProfilUsernameRoute = ProfilUsernameRouteImport.update({
   id: '/profil/$username',
@@ -49,11 +61,13 @@ const ProfilUsernameRoute = ProfilUsernameRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/profil/$username': typeof ProfilUsernameRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,25 +76,30 @@ export interface FileRoutesByTo {
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/profil/$username': typeof ProfilUsernameRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/profil/$username': typeof ProfilUsernameRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/atolye'
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
     | '/profil/$username'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,18 +108,22 @@ export interface FileRouteTypes {
     | '/kaydedilenler'
     | '/kesfet'
     | '/profil/$username'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/atolye'
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
     | '/profil/$username'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AtolyeRoute: typeof AtolyeRoute
   BildirimlerRoute: typeof BildirimlerRoute
   KaydedilenlerRoute: typeof KaydedilenlerRoute
@@ -138,12 +161,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AtolyeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/profil/$username': {
       id: '/profil/$username'
@@ -155,8 +192,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AtolyeRoute: AtolyeRoute,
   BildirimlerRoute: BildirimlerRoute,
   KaydedilenlerRoute: KaydedilenlerRoute,
@@ -166,3 +214,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
