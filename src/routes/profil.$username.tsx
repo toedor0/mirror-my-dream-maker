@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Sparkles, Bookmark, Wrench, BarChart3 } from "lucide-react";
+import { Sparkles, Bookmark, Wrench, BarChart3, Pencil } from "lucide-react";
+import { EditProfileDialog } from "@/components/profile/EditProfileDialog";
 
 export const Route = createFileRoute("/profil/$username")({ component: Profile });
 
@@ -16,6 +17,7 @@ function Profile() {
   const { username } = Route.useParams();
   const { user } = useAuth();
   const [following, setFollowing] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", username],
@@ -73,14 +75,23 @@ function Profile() {
         <>
           <div className="h-32 rounded-2xl bg-gradient-to-br from-primary/30 via-accent to-primary/10" />
           <div className="-mt-12 flex flex-col sm:flex-row sm:items-end gap-4 px-2">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-card border-4 border-background text-4xl shadow">
-              {profile.avatar_emoji ?? "🧵"}
+            <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-card border-4 border-background text-4xl shadow">
+              {profile.avatar_url ? (
+                <img src={profile.avatar_url} alt={profile.display_name} className="h-full w-full object-cover" />
+              ) : (
+                profile.avatar_emoji ?? "🧵"
+              )}
             </div>
             <div className="flex-1">
               <h1 className="font-serif text-2xl font-bold">{profile.display_name}</h1>
               <p className="text-sm text-muted-foreground">@{profile.username} {profile.city && `· ${profile.city}`}</p>
               {profile.bio && <p className="mt-2 text-sm">{profile.bio}</p>}
             </div>
+            {user && user.id === profile.id && (
+              <Button onClick={() => setEditOpen(true)} variant="outline" className="rounded-full">
+                <Pencil className="mr-1.5 h-3.5 w-3.5" /> Profili Düzenle
+              </Button>
+            )}
             {user && user.id !== profile.id && (
               <Button onClick={toggleFollow} variant={following ? "outline" : "default"} className="rounded-full">
                 {following ? "Takiptesin" : "Takip Et"}
@@ -138,6 +149,7 @@ function Profile() {
               </div>
             </TabsContent>
           </Tabs>
+          <EditProfileDialog open={editOpen} onOpenChange={setEditOpen} />
         </>
       )}
     </AppLayout>
