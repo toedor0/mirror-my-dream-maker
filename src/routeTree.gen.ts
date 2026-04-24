@@ -13,8 +13,14 @@ import { Route as KesfetRouteImport } from './routes/kesfet'
 import { Route as KaydedilenlerRouteImport } from './routes/kaydedilenler'
 import { Route as BildirimlerRouteImport } from './routes/bildirimler'
 import { Route as AtolyeRouteImport } from './routes/atolye'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProfilUsernameRouteImport } from './routes/profil.$username'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminThemesRouteImport } from './routes/admin.themes'
+import { Route as AdminPostsRouteImport } from './routes/admin.posts'
+import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 
 const KesfetRoute = KesfetRouteImport.update({
   id: '/kesfet',
@@ -36,24 +42,60 @@ const AtolyeRoute = AtolyeRouteImport.update({
   path: '/atolye',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const ProfilUsernameRoute = ProfilUsernameRouteImport.update({
   id: '/profil/$username',
   path: '/profil/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminThemesRoute = AdminThemesRouteImport.update({
+  id: '/themes',
+  path: '/themes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPostsRoute = AdminPostsRouteImport.update({
+  id: '/posts',
+  path: '/posts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
+  id: '/categories',
+  path: '/categories',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/posts': typeof AdminPostsRoute
+  '/admin/themes': typeof AdminThemesRoute
+  '/admin/users': typeof AdminUsersRoute
   '/profil/$username': typeof ProfilUsernameRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,26 +103,43 @@ export interface FileRoutesByTo {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/posts': typeof AdminPostsRoute
+  '/admin/themes': typeof AdminThemesRoute
+  '/admin/users': typeof AdminUsersRoute
   '/profil/$username': typeof ProfilUsernameRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/posts': typeof AdminPostsRoute
+  '/admin/themes': typeof AdminThemesRoute
+  '/admin/users': typeof AdminUsersRoute
   '/profil/$username': typeof ProfilUsernameRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/atolye'
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/admin/categories'
+    | '/admin/posts'
+    | '/admin/themes'
+    | '/admin/users'
     | '/profil/$username'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -88,19 +147,31 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/admin/categories'
+    | '/admin/posts'
+    | '/admin/themes'
+    | '/admin/users'
     | '/profil/$username'
+    | '/admin'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/atolye'
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/admin/categories'
+    | '/admin/posts'
+    | '/admin/themes'
+    | '/admin/users'
     | '/profil/$username'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AtolyeRoute: typeof AtolyeRoute
   BildirimlerRoute: typeof BildirimlerRoute
   KaydedilenlerRoute: typeof KaydedilenlerRoute
@@ -138,12 +209,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AtolyeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/profil/$username': {
       id: '/profil/$username'
@@ -152,11 +237,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/themes': {
+      id: '/admin/themes'
+      path: '/themes'
+      fullPath: '/admin/themes'
+      preLoaderRoute: typeof AdminThemesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/posts': {
+      id: '/admin/posts'
+      path: '/posts'
+      fullPath: '/admin/posts'
+      preLoaderRoute: typeof AdminPostsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/categories': {
+      id: '/admin/categories'
+      path: '/categories'
+      fullPath: '/admin/categories'
+      preLoaderRoute: typeof AdminCategoriesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminPostsRoute: typeof AdminPostsRoute
+  AdminThemesRoute: typeof AdminThemesRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminPostsRoute: AdminPostsRoute,
+  AdminThemesRoute: AdminThemesRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AtolyeRoute: AtolyeRoute,
   BildirimlerRoute: BildirimlerRoute,
   KaydedilenlerRoute: KaydedilenlerRoute,

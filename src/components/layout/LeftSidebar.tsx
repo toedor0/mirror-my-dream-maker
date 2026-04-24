@@ -1,8 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, BookOpen, Package, Wrench, Star, Bookmark, FileText } from "lucide-react";
+import { Home, BookOpen, Package, Wrench, Star, Bookmark, FileText, Shield } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useRole } from "@/hooks/useRole";
 import { useCategories, useCategoryCounts } from "@/lib/categories";
 import { Button } from "@/components/ui/button";
 
@@ -25,6 +26,7 @@ const navItems: NavItem[] = [
 
 export function LeftSidebar({ onAuthOpen }: { onAuthOpen: () => void }) {
   const { user, profile } = useAuth();
+  const { isMod } = useRole();
   const location = useLocation();
   const { data: categories = [] } = useCategories();
   const { data: catCounts } = useCategoryCounts();
@@ -162,6 +164,21 @@ export function LeftSidebar({ onAuthOpen }: { onAuthOpen: () => void }) {
           })}
         </nav>
       </div>
+
+      {isMod && (
+        <div>
+          <p className="px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            Yönetim
+          </p>
+          <Link
+            to="/admin"
+            className="flex items-center gap-2.5 rounded-lg bg-primary/10 px-3 py-2 text-sm font-semibold text-primary transition hover:bg-primary/15"
+          >
+            <Shield className="h-4 w-4" />
+            <span>Admin Paneli</span>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
