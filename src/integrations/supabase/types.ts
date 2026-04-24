@@ -178,6 +178,7 @@ export type Database = {
           created_at: string
           emoji: string | null
           hashtags: string[] | null
+          hidden: boolean
           id: string
           image_url: string | null
           kunye: Json | null
@@ -199,6 +200,7 @@ export type Database = {
           created_at?: string
           emoji?: string | null
           hashtags?: string[] | null
+          hidden?: boolean
           id?: string
           image_url?: string | null
           kunye?: Json | null
@@ -220,6 +222,7 @@ export type Database = {
           created_at?: string
           emoji?: string | null
           hashtags?: string[] | null
+          hidden?: boolean
           id?: string
           image_url?: string | null
           kunye?: Json | null
@@ -295,14 +298,107 @@ export type Database = {
           },
         ]
       }
+      user_bans: {
+        Row: {
+          banned_by: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          banned_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          banned_by?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      weekly_themes: {
+        Row: {
+          created_at: string
+          description: string | null
+          ends_at: string
+          hashtag: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          ends_at: string
+          hashtag: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          starts_at: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          ends_at?: string
+          hashtag?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          starts_at?: string
+          title?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin_or_mod: { Args: { _user_id: string }; Returns: boolean }
+      is_user_banned: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
+      app_role: "admin" | "moderator" | "user"
       atolye_status: "bekliyor" | "cozuldu"
       difficulty_level: "kolay" | "orta" | "zor" | "uzman"
       notif_type: "like" | "comment" | "follow" | "solved" | "save"
@@ -434,6 +530,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "moderator", "user"],
       atolye_status: ["bekliyor", "cozuldu"],
       difficulty_level: ["kolay", "orta", "zor", "uzman"],
       notif_type: ["like", "comment", "follow", "solved", "save"],
