@@ -35,7 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-4 px-4 lg:px-6">
+        <div className="flex h-16 w-full items-center gap-4 px-4 lg:px-8 xl:px-12">
           <Link to="/" className="flex items-center gap-2 shrink-0">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary font-serif text-sm font-bold text-primary-foreground">
               ÇD
@@ -117,14 +117,14 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-[1400px] gap-6 px-4 py-6 lg:px-6 lg:grid-cols-[260px_minmax(0,1fr)_300px]">
+      <div className="grid w-full gap-6 px-4 py-6 lg:px-8 xl:px-12 lg:grid-cols-[280px_minmax(0,1fr)_320px] xl:gap-10">
         <aside className="hidden lg:block">
           <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pb-6">
             <LeftSidebar onAuthOpen={() => setAuthOpen(true)} />
           </div>
         </aside>
 
-        <main className="min-w-0">
+        <main className="min-w-0 mx-auto w-full max-w-3xl">
           {/* Provide context for child via React context-free prop drilling */}
           <AppLayoutContext.Provider value={{ openCreate, openAuth: () => setAuthOpen(true) }}>
             {children}
