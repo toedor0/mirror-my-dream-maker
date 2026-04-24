@@ -18,6 +18,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProfilUsernameRouteImport } from './routes/profil.$username'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminThemesRouteImport } from './routes/admin.themes'
 import { Route as AdminPostsRouteImport } from './routes/admin.posts'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 
@@ -66,6 +67,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminThemesRoute = AdminThemesRouteImport.update({
+  id: '/themes',
+  path: '/themes',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPostsRoute = AdminPostsRouteImport.update({
   id: '/posts',
   path: '/posts',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/posts': typeof AdminPostsRoute
+  '/admin/themes': typeof AdminThemesRoute
   '/admin/users': typeof AdminUsersRoute
   '/profil/$username': typeof ProfilUsernameRoute
   '/admin/': typeof AdminIndexRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/posts': typeof AdminPostsRoute
+  '/admin/themes': typeof AdminThemesRoute
   '/admin/users': typeof AdminUsersRoute
   '/profil/$username': typeof ProfilUsernameRoute
   '/admin': typeof AdminIndexRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/posts': typeof AdminPostsRoute
+  '/admin/themes': typeof AdminThemesRoute
   '/admin/users': typeof AdminUsersRoute
   '/profil/$username': typeof ProfilUsernameRoute
   '/admin/': typeof AdminIndexRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/kesfet'
     | '/admin/categories'
     | '/admin/posts'
+    | '/admin/themes'
     | '/admin/users'
     | '/profil/$username'
     | '/admin/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/kesfet'
     | '/admin/categories'
     | '/admin/posts'
+    | '/admin/themes'
     | '/admin/users'
     | '/profil/$username'
     | '/admin'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/kesfet'
     | '/admin/categories'
     | '/admin/posts'
+    | '/admin/themes'
     | '/admin/users'
     | '/profil/$username'
     | '/admin/'
@@ -232,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/themes': {
+      id: '/admin/themes'
+      path: '/themes'
+      fullPath: '/admin/themes'
+      preLoaderRoute: typeof AdminThemesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/posts': {
       id: '/admin/posts'
       path: '/posts'
@@ -252,6 +271,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminPostsRoute: typeof AdminPostsRoute
+  AdminThemesRoute: typeof AdminThemesRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -259,6 +279,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminPostsRoute: AdminPostsRoute,
+  AdminThemesRoute: AdminThemesRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
