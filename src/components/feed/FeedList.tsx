@@ -41,6 +41,7 @@ export function FeedList({ filter = "all", category, authorId, savedByUser, foll
       let q = supabase
         .from("posts")
         .select("*, author:profiles!posts_author_id_fkey(id,username,display_name,avatar_emoji)")
+        .eq("hidden", false)
         .order("created_at", { ascending: false })
         .limit(40);
       if (filter !== "all") q = q.eq("type", filter);
