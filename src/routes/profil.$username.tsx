@@ -5,8 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Sparkles, Bookmark, Wrench, BarChart3 } from "lucide-react";
 
 export const Route = createFileRoute("/profil/$username")({ component: Profile });
 
@@ -24,6 +26,31 @@ function Profile() {
         setFollowing(!!f);
       }
       return data;
+    },
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ["profile-stats", profile?.id],
+    enabled: !!profile?.id,
+    queryFn: async () => {
+      const [postsRes, followersRes, followingRes, solvedRes] = await Promise.all([
+        supabase.from("posts").select("type", { count: "exact" }).eq("author_id", profile!.id),
+        supabase.from("follows").select("follower_id", { count: "exact", head: true }).eq("following_id", profile!.id),
+        supabase.from("follows").select("following_id", { count: "exact", head: true }).eq("follower_id", profile!.id),
+        supabase.from("posts").select("id", { count: "exact", head: true }).eq("author_id", profile!.id).eq("atolye_status", "cozuldu"),
+      ]);
+      const byType = new Map<string, number>();
+      (postsRes.data ?? []).forEach((p) => byType.set(p.type, (byType.get(p.type) ?? 0) + 1));
+      return {
+        total: postsRes.count ?? 0,
+        uretim: byType.get("uretim") ?? 0,
+        atolye: byType.get("atolye") ?? 0,
+        oneri: byType.get("oneri") ?? 0,
+        blog: byType.get("blog") ?? 0,
+        followers: followersRes.count ?? 0,
+        following: followingRes.count ?? 0,
+        solved: solvedRes.count ?? 0,
+      };
     },
   });
 
@@ -60,12 +87,68 @@ function Profile() {
               </Button>
             )}
           </div>
-          <div className="mt-8">
-            <h2 className="font-serif text-lg font-semibold mb-4">Paylaşımlar</h2>
-            <FeedList authorId={profile.id} />
+
+          <div className="mt-6 grid grid-cols-3 gap-3 px-2 sm:max-w-md">
+            <StatBox label="Üretim" value={stats?.uretim ?? 0} />
+            <StatBox label="Takipçi" value={stats?.followers ?? 0} />
+            <StatBox label="Çözüm" value={stats?.solved ?? 0} />
           </div>
+
+          <Tabs defaultValue="uretim" className="mt-8">
+            <TabsList className="w-full justify-start gap-1 rounded-full bg-muted/50 p-1">
+              <TabsTrigger value="uretim" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow">
+                <Sparkles className="mr-1.5 h-3.5 w-3.5" /> Üretimler
+                <span className="ml-1.5 text-[10px] text-muted-foreground">{stats?.uretim ?? 0}</span>
+              </TabsTrigger>
+              {user && user.id === profile.id && (
+                <TabsTrigger value="kaydedilen" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow">
+                  <Bookmark className="mr-1.5 h-3.5 w-3.5" /> Kaydedilenler
+                </TabsTrigger>
+              )}
+              <TabsTrigger value="atolye" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow">
+                <Wrench className="mr-1.5 h-3.5 w-3.5" /> Atölye
+                <span className="ml-1.5 text-[10px] text-muted-foreground">{stats?.atolye ?? 0}</span>
+              </TabsTrigger>
+              <TabsTrigger value="istatistik" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow">
+                <BarChart3 className="mr-1.5 h-3.5 w-3.5" /> İstatistik
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="uretim" className="mt-5">
+              <FeedList filter="uretim" authorId={profile.id} />
+            </TabsContent>
+            {user && user.id === profile.id && (
+              <TabsContent value="kaydedilen" className="mt-5">
+                <FeedList savedByUser />
+              </TabsContent>
+            )}
+            <TabsContent value="atolye" className="mt-5">
+              <FeedList filter="atolye" authorId={profile.id} />
+            </TabsContent>
+            <TabsContent value="istatistik" className="mt-5">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <StatBox label="Toplam Paylaşım" value={stats?.total ?? 0} />
+                <StatBox label="Üretim" value={stats?.uretim ?? 0} />
+                <StatBox label="Atölye" value={stats?.atolye ?? 0} />
+                <StatBox label="Öneri" value={stats?.oneri ?? 0} />
+                <StatBox label="Blog" value={stats?.blog ?? 0} />
+                <StatBox label="Çözülen Sorun" value={stats?.solved ?? 0} />
+                <StatBox label="Takipçi" value={stats?.followers ?? 0} />
+                <StatBox label="Takip" value={stats?.following ?? 0} />
+              </div>
+            </TabsContent>
+          </Tabs>
         </>
       )}
     </AppLayout>
+  );
+}
+
+function StatBox({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-3 text-center">
+      <div className="font-serif text-2xl font-bold">{value}</div>
+      <div className="mt-0.5 text-[11px] text-muted-foreground">{label}</div>
+    </div>
   );
 }
