@@ -12,23 +12,30 @@ import { FeedWidget } from "@/components/feed/FeedWidget";
 
 type FilterType = "all" | "uretim" | "atolye" | "oneri" | "blog";
 
-export function FeedList({ filter = "all", category, authorId, savedByUser }: {
+export function FeedList({ filter = "all", category, authorId, savedByUser, followingOnly }: {
   filter?: FilterType;
   category?: string;
   authorId?: string;
   savedByUser?: boolean;
+  followingOnly?: boolean;
 }) {
   const { user } = useAuth();
   const [openId, setOpenId] = useState<string | null>(null);
 
   const { data: posts = [], isLoading } = useQuery({
-    queryKey: ["feed", filter, category, authorId, savedByUser, user?.id],
+    queryKey: ["feed", filter, category, authorId, savedByUser, followingOnly, user?.id],
     queryFn: async (): Promise<FeedPost[]> => {
       let postIds: string[] | null = null;
       if (savedByUser && user) {
         const { data: s } = await supabase.from("saves").select("post_id").eq("user_id", user.id);
         postIds = (s ?? []).map((r) => r.post_id);
         if (postIds.length === 0) return [];
+      }
+      let authorIds: string[] | null = null;
+      if (followingOnly && user) {
+        const { data: f } = await supabase.from("follows").select("following_id").eq("follower_id", user.id);
+        authorIds = (f ?? []).map((r) => r.following_id);
+        if (authorIds.length === 0) return [];
       }
 
       let q = supabase
@@ -40,6 +47,7 @@ export function FeedList({ filter = "all", category, authorId, savedByUser }: {
       if (category) q = q.eq("category", category);
       if (authorId) q = q.eq("author_id", authorId);
       if (postIds) q = q.in("id", postIds);
+      if (authorIds) q = q.in("author_id", authorIds);
 
       const { data, error } = await q;
       if (error) throw error;
