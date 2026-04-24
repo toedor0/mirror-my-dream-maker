@@ -17,6 +17,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProfilUsernameRouteImport } from './routes/profil.$username'
+import { Route as AdminPostsRouteImport } from './routes/admin.posts'
 
 const KesfetRoute = KesfetRouteImport.update({
   id: '/kesfet',
@@ -58,6 +59,11 @@ const ProfilUsernameRoute = ProfilUsernameRouteImport.update({
   path: '/profil/$username',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminPostsRoute = AdminPostsRouteImport.update({
+  id: '/posts',
+  path: '/posts',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/admin/posts': typeof AdminPostsRoute
   '/profil/$username': typeof ProfilUsernameRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/admin/posts': typeof AdminPostsRoute
   '/profil/$username': typeof ProfilUsernameRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/bildirimler': typeof BildirimlerRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
+  '/admin/posts': typeof AdminPostsRoute
   '/profil/$username': typeof ProfilUsernameRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -98,6 +107,7 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/admin/posts'
     | '/profil/$username'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/admin/posts'
     | '/profil/$username'
     | '/admin'
   id:
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/bildirimler'
     | '/kaydedilenler'
     | '/kesfet'
+    | '/admin/posts'
     | '/profil/$username'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -189,14 +201,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilUsernameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/posts': {
+      id: '/admin/posts'
+      path: '/posts'
+      fullPath: '/admin/posts'
+      preLoaderRoute: typeof AdminPostsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminPostsRoute: typeof AdminPostsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminPostsRoute: AdminPostsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
