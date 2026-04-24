@@ -89,6 +89,7 @@ export function CreatePostDialog({ open, onOpenChange, defaultType = "uretim" }:
       if (error) throw error;
       toast.success("Paylaşıldı! 🎉");
       queryClient.invalidateQueries({ queryKey: ["feed"] });
+      queryClient.invalidateQueries({ queryKey: ["profile-stats"] });
       reset();
       onOpenChange(false);
     } catch (err) {

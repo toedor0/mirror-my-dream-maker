@@ -68,7 +68,7 @@ export function OneriCard({ post, onOpen }: { post: FeedPost; onOpen: () => void
         </div>
       ) : null}
 
-      <CardActions post={post} icons={{ Heart, MessageCircle, Bookmark, Share2 }} />
+      <CardActions post={post} icons={{ Heart, MessageCircle, Bookmark, Share2 }} onCommentClick={onOpen} />
     </article>
   );
 }
