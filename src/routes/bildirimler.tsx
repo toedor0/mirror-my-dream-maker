@@ -13,13 +13,28 @@ function Notifs() {
     queryKey: ["notifs", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data } = await supabase
+      const { data: notifs } = await supabase
         .from("notifications")
-        .select("*, actor:profiles!notifications_actor_id_fkey(display_name,avatar_emoji,username)")
+        .select("*")
         .eq("recipient_id", user!.id)
         .order("created_at", { ascending: false })
         .limit(50);
-      return data ?? [];
+      const list = notifs ?? [];
+      const actorIds = Array.from(
+        new Set(list.map((n) => n.actor_id).filter((x): x is string => !!x))
+      );
+      let actorMap = new Map<string, { display_name: string; avatar_emoji: string | null; username: string }>();
+      if (actorIds.length) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("id,display_name,avatar_emoji,username")
+          .in("id", actorIds);
+        actorMap = new Map((profs ?? []).map((p) => [p.id, p]));
+      }
+      return list.map((n) => ({
+        ...n,
+        actor: n.actor_id ? actorMap.get(n.actor_id) ?? null : null,
+      }));
     },
   });
 
@@ -32,7 +47,7 @@ function Notifs() {
         <p className="mt-6 rounded-2xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">Henüz bildirim yok.</p>
       ) : (
         <div className="mt-6 space-y-2">
-          {data.map((n: { id: string; read: boolean; type: string; created_at: string; actor?: { display_name?: string; avatar_emoji?: string | null } | null }) => (
+          {data.map((n) => (
             <div key={n.id} className={`flex items-center gap-3 rounded-xl border border-border p-3 ${!n.read ? "bg-accent/30" : "bg-card"}`}>
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent">{n.actor?.avatar_emoji ?? "🧵"}</div>
               <div className="flex-1 text-sm">
