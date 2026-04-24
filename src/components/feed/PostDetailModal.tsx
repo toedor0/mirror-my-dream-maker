@@ -5,8 +5,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { categoryEmoji, categoryLabel, timeAgo } from "@/lib/post-helpers";
 import type { FeedPost } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
+import { Send, Share2 } from "lucide-react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Comment {
   id: string;
@@ -20,6 +21,7 @@ interface Comment {
 
 export function PostDetailModal({ postId, onClose }: { postId: string; onClose: () => void }) {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [post, setPost] = useState<FeedPost | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [text, setText] = useState("");
@@ -52,6 +54,18 @@ export function PostDetailModal({ postId, onClose }: { postId: string; onClose: 
     if (error) return toast.error(error.message);
     setText(""); setPin(null);
     load();
+    queryClient.invalidateQueries({ queryKey: ["feed"] });
+  };
+
+  const sharePost = async () => {
+    if (!post) return;
+    const url = `${window.location.origin}/post/${post.id}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: post.title, url }); } catch {/* cancelled */}
+    } else {
+      await navigator.clipboard.writeText(url);
+      toast.success("Bağlantı kopyalandı");
+    }
   };
 
   const onImageClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -101,6 +115,9 @@ export function PostDetailModal({ postId, onClose }: { postId: string; onClose: 
                 <h2 className="mt-3 font-serif text-2xl font-bold">{post.title}</h2>
                 {post.category && <p className="mt-1 text-xs text-muted-foreground">{categoryLabel(post.category)}</p>}
                 {post.content && <p className="mt-3 text-sm whitespace-pre-wrap">{post.content}</p>}
+                <button onClick={sharePost} className="mt-3 inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground">
+                  <Share2 className="h-3.5 w-3.5" /> Paylaş
+                </button>
 
                 <div className="mt-5 border-t border-border pt-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Yorumlar ({comments.length})</p>

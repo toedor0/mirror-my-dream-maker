@@ -55,7 +55,7 @@ export function UretimCard({ post, onOpen }: { post: FeedPost; onOpen: () => voi
           </div>
         ) : null}
 
-        <CardActions post={post} icons={{ Heart, MessageCircle, Bookmark, Share2 }} />
+        <CardActions post={post} icons={{ Heart, MessageCircle, Bookmark, Share2 }} onCommentClick={onOpen} />
       </div>
     </article>
   );

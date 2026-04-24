@@ -56,7 +56,7 @@ export function AtolyeCard({ post, onOpen }: { post: FeedPost; onOpen: () => voi
         )}
 
         <div className="mt-3 flex items-center justify-between">
-          <CardActions post={post} icons={{ Heart, MessageCircle, Bookmark, Share2 }} compact />
+          <CardActions post={post} icons={{ Heart, MessageCircle, Bookmark, Share2 }} compact onCommentClick={onOpen} />
           <button onClick={onOpen} className="text-sm font-medium text-primary hover:underline">
             {solved ? "Çözümü Gör →" : "Yardım Et →"}
           </button>
