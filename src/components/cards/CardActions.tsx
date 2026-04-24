@@ -9,9 +9,10 @@ interface Props {
   post: FeedPost;
   icons: { Heart: LucideIcon; MessageCircle: LucideIcon; Bookmark: LucideIcon; Share2: LucideIcon };
   compact?: boolean;
+  onCommentClick?: () => void;
 }
 
-export function CardActions({ post, icons, compact }: Props) {
+export function CardActions({ post, icons, compact, onCommentClick }: Props) {
   const { Heart, MessageCircle, Bookmark, Share2 } = icons;
   const { user } = useAuth();
   const [liked, setLiked] = useState(post.liked ?? false);
@@ -45,7 +46,7 @@ export function CardActions({ post, icons, compact }: Props) {
 
   const share = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const url = `${window.location.origin}/?p=${post.id}`;
+    const url = `${window.location.origin}/post/${post.id}`;
     if (navigator.share) {
       try { await navigator.share({ title: post.title, url }); } catch {/* cancelled */}
     } else {
@@ -60,7 +61,7 @@ export function CardActions({ post, icons, compact }: Props) {
         <Heart className={`h-4 w-4 ${liked ? "fill-rose-500 text-rose-500" : ""}`} />
         {likeCount > 0 && <span>{likeCount}</span>}
       </button>
-      <button className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+      <button onClick={(e) => { e.stopPropagation(); onCommentClick?.(); }} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
         <MessageCircle className="h-4 w-4" />
         {post.comment_count ? <span>{post.comment_count}</span> : null}
       </button>
