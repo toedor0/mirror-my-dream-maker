@@ -13,28 +13,16 @@ function Notifs() {
     queryKey: ["notifs", user?.id],
     enabled: !!user,
     queryFn: async () => {
-      const { data: notifs } = await supabase
+      const { data } = await supabase
         .from("notifications")
-        .select("*")
+        .select("*, actor:profiles!notifications_actor_id_fkey(display_name,avatar_emoji,username)")
         .eq("recipient_id", user!.id)
         .order("created_at", { ascending: false })
         .limit(50);
-      const list = notifs ?? [];
-      const actorIds = Array.from(
-        new Set(list.map((n) => n.actor_id).filter((x): x is string => !!x))
-      );
-      let actorMap = new Map<string, { display_name: string; avatar_emoji: string | null; username: string }>();
-      if (actorIds.length) {
-        const { data: profs } = await supabase
-          .from("profiles")
-          .select("id,display_name,avatar_emoji,username")
-          .in("id", actorIds);
-        actorMap = new Map((profs ?? []).map((p) => [p.id, p]));
-      }
-      return list.map((n) => ({
-        ...n,
-        actor: n.actor_id ? actorMap.get(n.actor_id) ?? null : null,
-      }));
+      return (data ?? []) as Array<{
+        id: string; read: boolean; type: string; created_at: string;
+        actor: { display_name?: string; avatar_emoji?: string | null } | null;
+      }>;
     },
   });
 
