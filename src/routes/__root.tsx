@@ -47,10 +47,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       { name: "description", content: "Projelerinizi paylaşın, malzemelerinizi takip edin, atölyenizi yönetin. El sanatları için tek platform." },
       { name: "author", content: "Çift Dikiş" },
       { property: "og:title", content: "Çift Dikiş - El İşi Topluluğu" },
-      { property: "og:description", content: "Projelerinizi paylaşın, malzemelerinizi takip edin, atölyenizi yönetin." },
+      { property: "og:description", content: "Projelerinizi paylaşın, malzemelerinizi takip edin, atölyenizi yönetin. El sanatları için tek platform." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Çift Dikiş - El İşi Topluluğu" },
+      { name: "twitter:description", content: "Projelerinizi paylaşın, malzemelerinizi takip edin, atölyenizi yönetin. El sanatları için tek platform." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a05d9db6-9914-41be-919f-6e580c019200/id-preview-9b798ff7--8e7a003e-1488-404a-ae44-de8fd4ed4a9c.lovable.app-1777077713308.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a05d9db6-9914-41be-919f-6e580c019200/id-preview-9b798ff7--8e7a003e-1488-404a-ae44-de8fd4ed4a9c.lovable.app-1777077713308.png" },
     ],
     links: [
       {
