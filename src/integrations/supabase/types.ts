@@ -431,6 +431,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_notification: {
+        Args: {
+          _actor_id: string
+          _post_id: string
+          _recipient_id: string
+          _type: Database["public"]["Enums"]["notif_type"]
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
