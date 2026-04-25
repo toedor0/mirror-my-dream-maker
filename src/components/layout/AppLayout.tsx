@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "@tanstack/react-router";
 import { Search, Bell, User, Moon, Sun, Plus, LogOut, Bookmark } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
@@ -25,6 +25,17 @@ export function AppLayout({ children }: AppLayoutProps) {
   const [authOpen, setAuthOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [createType, setCreateType] = useState<CreatePreset>("uretim");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const initialQ = location.pathname === "/ara" ? (location.search as { q?: string }).q ?? "" : "";
+  const [searchText, setSearchText] = useState(initialQ);
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchText.trim();
+    if (!q) return;
+    navigate({ to: "/ara", search: { q } });
+  };
 
   const openCreate = (preset: CreatePreset = "uretim") => {
     if (!user) return setAuthOpen(true);
@@ -45,14 +56,16 @@ export function AppLayout({ children }: AppLayoutProps) {
             </span>
           </Link>
 
-          <div className="relative flex-1 max-w-2xl mx-auto">
+          <form onSubmit={submitSearch} className="relative flex-1 max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <input
-              type="text"
-              placeholder="Proje, malzeme, üye veya çözüm ara..."
+              type="search"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              placeholder="Ara: kelime, @kullanıcı veya #etiket"
               className="w-full rounded-full border border-border bg-input/40 py-2.5 pl-11 pr-4 text-sm outline-none transition focus:border-primary focus:bg-background"
             />
-          </div>
+          </form>
 
           <div className="flex items-center gap-1.5">
             {user && (
