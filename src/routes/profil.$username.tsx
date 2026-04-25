@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { FeedList } from "@/components/feed/FeedList";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ function Profile() {
   const { user } = useAuth();
   const [following, setFollowing] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", username],
@@ -57,13 +59,32 @@ function Profile() {
   });
 
   const toggleFollow = async () => {
-    if (!user || !profile) return toast.error("Giriş yap");
-    if (following) {
-      setFollowing(false);
-      await supabase.from("follows").delete().eq("follower_id", user.id).eq("following_id", profile.id);
-    } else {
-      setFollowing(true);
-      await supabase.from("follows").insert({ follower_id: user.id, following_id: profile.id });
+    if (!user) return toast.error("Takip etmek için giriş yap");
+    if (!profile || user.id === profile.id || followLoading) return;
+    const wasFollowing = following;
+    setFollowing(!wasFollowing);
+    setFollowLoading(true);
+    try {
+      if (wasFollowing) {
+        const { error } = await supabase
+          .from("follows")
+          .delete()
+          .eq("follower_id", user.id)
+          .eq("following_id", profile.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from("follows")
+          .insert({ follower_id: user.id, following_id: profile.id });
+        if (error) throw error;
+        toast.success(`${profile.display_name} takip ediliyor`);
+      }
+      queryClient.invalidateQueries({ queryKey: ["profile-stats", profile.id] });
+    } catch (e) {
+      setFollowing(wasFollowing);
+      toast.error((e as Error).message ?? "İşlem başarısız");
+    } finally {
+      setFollowLoading(false);
     }
   };
 
@@ -93,7 +114,12 @@ function Profile() {
               </Button>
             )}
             {user && user.id !== profile.id && (
-              <Button onClick={toggleFollow} variant={following ? "outline" : "default"} className="rounded-full">
+              <Button
+                onClick={toggleFollow}
+                disabled={followLoading}
+                variant={following ? "outline" : "default"}
+                className="rounded-full"
+              >
                 {following ? "Takiptesin" : "Takip Et"}
               </Button>
             )}
