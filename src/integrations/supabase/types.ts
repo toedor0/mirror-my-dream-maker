@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_pin_settings: {
+        Row: {
+          created_at: string
+          id: boolean
+          pin_hash: string
+          salt: string
+          set_by: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: boolean
+          pin_hash: string
+          salt: string
+          set_by?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: boolean
+          pin_hash?: string
+          salt?: string
+          set_by?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           color: string
