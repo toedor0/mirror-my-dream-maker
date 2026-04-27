@@ -21,6 +21,7 @@ import { Route as ProfilUsernameRouteImport } from './routes/profil.$username'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminThemesRouteImport } from './routes/admin.themes'
 import { Route as AdminPostsRouteImport } from './routes/admin.posts'
+import { Route as AdminGirisRouteImport } from './routes/admin.giris'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 
 const KesfetRoute = KesfetRouteImport.update({
@@ -83,6 +84,11 @@ const AdminPostsRoute = AdminPostsRouteImport.update({
   path: '/posts',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminGirisRoute = AdminGirisRouteImport.update({
+  id: '/giris',
+  path: '/giris',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminCategoriesRoute = AdminCategoriesRouteImport.update({
   id: '/categories',
   path: '/categories',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/giris': typeof AdminGirisRoute
   '/admin/posts': typeof AdminPostsRoute
   '/admin/themes': typeof AdminThemesRoute
   '/admin/users': typeof AdminUsersRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/giris': typeof AdminGirisRoute
   '/admin/posts': typeof AdminPostsRoute
   '/admin/themes': typeof AdminThemesRoute
   '/admin/users': typeof AdminUsersRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
+  '/admin/giris': typeof AdminGirisRoute
   '/admin/posts': typeof AdminPostsRoute
   '/admin/themes': typeof AdminThemesRoute
   '/admin/users': typeof AdminUsersRoute
@@ -145,6 +154,7 @@ export interface FileRouteTypes {
     | '/kaydedilenler'
     | '/kesfet'
     | '/admin/categories'
+    | '/admin/giris'
     | '/admin/posts'
     | '/admin/themes'
     | '/admin/users'
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/kaydedilenler'
     | '/kesfet'
     | '/admin/categories'
+    | '/admin/giris'
     | '/admin/posts'
     | '/admin/themes'
     | '/admin/users'
@@ -174,6 +185,7 @@ export interface FileRouteTypes {
     | '/kaydedilenler'
     | '/kesfet'
     | '/admin/categories'
+    | '/admin/giris'
     | '/admin/posts'
     | '/admin/themes'
     | '/admin/users'
@@ -278,6 +290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPostsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/giris': {
+      id: '/admin/giris'
+      path: '/giris'
+      fullPath: '/admin/giris'
+      preLoaderRoute: typeof AdminGirisRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/categories': {
       id: '/admin/categories'
       path: '/categories'
@@ -290,6 +309,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminCategoriesRoute: typeof AdminCategoriesRoute
+  AdminGirisRoute: typeof AdminGirisRoute
   AdminPostsRoute: typeof AdminPostsRoute
   AdminThemesRoute: typeof AdminThemesRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -298,6 +318,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminCategoriesRoute: AdminCategoriesRoute,
+  AdminGirisRoute: AdminGirisRoute,
   AdminPostsRoute: AdminPostsRoute,
   AdminThemesRoute: AdminThemesRoute,
   AdminUsersRoute: AdminUsersRoute,
