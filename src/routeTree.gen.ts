@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as KesfetRouteImport } from './routes/kesfet'
 import { Route as KaydedilenlerRouteImport } from './routes/kaydedilenler'
+import { Route as GizlilikRouteImport } from './routes/gizlilik'
 import { Route as BildirimlerRouteImport } from './routes/bildirimler'
 import { Route as AtolyeRouteImport } from './routes/atolye'
 import { Route as AraRouteImport } from './routes/ara'
@@ -32,6 +33,11 @@ const KesfetRoute = KesfetRouteImport.update({
 const KaydedilenlerRoute = KaydedilenlerRouteImport.update({
   id: '/kaydedilenler',
   path: '/kaydedilenler',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GizlilikRoute = GizlilikRouteImport.update({
+  id: '/gizlilik',
+  path: '/gizlilik',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BildirimlerRoute = BildirimlerRouteImport.update({
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/ara': typeof AraRoute
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
+  '/gizlilik': typeof GizlilikRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/ara': typeof AraRoute
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
+  '/gizlilik': typeof GizlilikRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/ara': typeof AraRoute
   '/atolye': typeof AtolyeRoute
   '/bildirimler': typeof BildirimlerRoute
+  '/gizlilik': typeof GizlilikRoute
   '/kaydedilenler': typeof KaydedilenlerRoute
   '/kesfet': typeof KesfetRoute
   '/admin/categories': typeof AdminCategoriesRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/ara'
     | '/atolye'
     | '/bildirimler'
+    | '/gizlilik'
     | '/kaydedilenler'
     | '/kesfet'
     | '/admin/categories'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/ara'
     | '/atolye'
     | '/bildirimler'
+    | '/gizlilik'
     | '/kaydedilenler'
     | '/kesfet'
     | '/admin/categories'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/ara'
     | '/atolye'
     | '/bildirimler'
+    | '/gizlilik'
     | '/kaydedilenler'
     | '/kesfet'
     | '/admin/categories'
@@ -199,6 +211,7 @@ export interface RootRouteChildren {
   AraRoute: typeof AraRoute
   AtolyeRoute: typeof AtolyeRoute
   BildirimlerRoute: typeof BildirimlerRoute
+  GizlilikRoute: typeof GizlilikRoute
   KaydedilenlerRoute: typeof KaydedilenlerRoute
   KesfetRoute: typeof KesfetRoute
   ProfilUsernameRoute: typeof ProfilUsernameRoute
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       path: '/kaydedilenler'
       fullPath: '/kaydedilenler'
       preLoaderRoute: typeof KaydedilenlerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gizlilik': {
+      id: '/gizlilik'
+      path: '/gizlilik'
+      fullPath: '/gizlilik'
+      preLoaderRoute: typeof GizlilikRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bildirimler': {
@@ -333,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   AraRoute: AraRoute,
   AtolyeRoute: AtolyeRoute,
   BildirimlerRoute: BildirimlerRoute,
+  GizlilikRoute: GizlilikRoute,
   KaydedilenlerRoute: KaydedilenlerRoute,
   KesfetRoute: KesfetRoute,
   ProfilUsernameRoute: ProfilUsernameRoute,
