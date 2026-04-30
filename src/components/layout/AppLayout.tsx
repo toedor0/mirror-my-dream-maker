@@ -151,6 +151,23 @@ export function AppLayout({ children }: AppLayoutProps) {
         </aside>
       </div>
 
+      <footer className="mt-8 border-t border-border/60 bg-muted/20">
+        <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-4 py-6 text-xs text-muted-foreground sm:flex-row lg:px-8 xl:px-12">
+          <p>© {new Date().getFullYear()} Çift Dikiş — El işi topluluğu</p>
+          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <Link to="/gizlilik" className="hover:text-foreground transition">
+              Gizlilik Politikası
+            </Link>
+            <Link to="/kvkk" className="hover:text-foreground transition">
+              KVKK Aydınlatma
+            </Link>
+            <Link to="/cerez" className="hover:text-foreground transition">
+              Çerez Politikası
+            </Link>
+          </nav>
+        </div>
+      </footer>
+
       <AuthDialog open={authOpen} onOpenChange={setAuthOpen} />
       {user && (
         <CreatePostDialog

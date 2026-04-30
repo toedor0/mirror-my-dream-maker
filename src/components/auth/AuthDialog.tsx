@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
+import { Link } from "@tanstack/react-router";
 
 interface Props {
   open: boolean;
@@ -113,6 +114,14 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "signin" }: Props
           <Button type="submit" disabled={loading} className="w-full rounded-full">
             {loading ? "Bekle..." : mode === "signup" ? "Kaydol" : "Giriş Yap"}
           </Button>
+          {mode === "signup" && (
+            <p className="text-center text-[11px] text-muted-foreground">
+              Kaydolarak{" "}
+              <Link to="/gizlilik" className="underline hover:text-foreground">Gizlilik Politikası</Link>,{" "}
+              <Link to="/kvkk" className="underline hover:text-foreground">KVKK Aydınlatma Metni</Link> ve{" "}
+              <Link to="/cerez" className="underline hover:text-foreground">Çerez Politikası</Link>'nı kabul etmiş olursun.
+            </p>
+          )}
           <p className="text-center text-sm text-muted-foreground">
             {mode === "signup" ? "Zaten hesabın var mı? " : "Henüz hesabın yok mu? "}
             <button
