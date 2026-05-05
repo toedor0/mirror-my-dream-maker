@@ -22,13 +22,14 @@ function AdminLayout() {
   const { isMod, loading: rl } = useRole();
   const location = useLocation();
   const navigate = useNavigate();
+  const isPinRoute = location.pathname === "/admin/giris";
   const [pinOk, setPinOk] = useState<boolean>(() => isPinVerified());
 
   useEffect(() => {
-    if (!loading && !rl && user && isMod && !isPinVerified()) {
+    if (!loading && !rl && user && isMod && !isPinRoute && !isPinVerified()) {
       navigate({ to: "/admin/giris", search: { redirect: location.pathname } });
     }
-  }, [loading, rl, user, isMod, navigate, location.pathname]);
+  }, [loading, rl, user, isMod, isPinRoute, navigate, location.pathname]);
 
   useEffect(() => {
     const sync = () => setPinOk(isPinVerified());
@@ -50,6 +51,10 @@ function AdminLayout() {
         </div>
       </AppLayout>
     );
+  }
+
+  if (isPinRoute) {
+    return <Outlet />;
   }
 
   if (!pinOk) {
